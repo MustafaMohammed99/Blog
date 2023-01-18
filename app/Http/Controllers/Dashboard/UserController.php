@@ -3,15 +3,16 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Actions\Fortify\PasswordValidationRules;
-use App\Actions\Fortify\UpdateUserPassword;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UserRequest;
+use App\Models\Post;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Session;
+use Illuminate\Validation\Rules;
+use Illuminate\Validation\ValidationException;
 
 class UserController extends Controller
 {
@@ -22,10 +23,10 @@ class UserController extends Controller
     public function index()
     {
         Gate::authorize('users.index');
-
         $request = request();
-        $users = User::filter($request->query())
-            ->orderBy('users.type')
+        $users = User::withCount('posts')
+            ->filter($request->query()) 
+            ->orderBy('users.type', 'desc')
             ->paginate();
 
         return view('dashboard.users.index', compact('users'));
@@ -37,7 +38,7 @@ class UserController extends Controller
 
         return view('dashboard.users.create', [
             'user' => new User(),
-            'confirm_password' => false
+            'showPassword' => true
         ]);
     }
 
@@ -61,43 +62,62 @@ class UserController extends Controller
     }
 
 
-    public function show($id)
+    public function show(User $user)
     {
-        //
+        $posts = Post::where('user_id', $user->id)->paginate();
+        return view('dashboard.posts.show', [
+            'user' => $user,
+            'posts'=>$posts
+        ]);
     }
 
 
     public function edit(User $user)
     {
-        Gate::authorize('users.update');
-        $confirm_password = 'false';
-        return view('dashboard.users.edit', compact('user', 'confirm_password'));
+        if (Auth::user()->id !== $user->id) {
+            if (Auth::user()->type !== 'admin') {
+                Gate::authorize('users.update');
+            }
+        }
+        $showPassword = false;
+        return view('dashboard.users.edit', compact('user', 'showPassword'));
     }
 
     public function updatePassword(Request $request)
     {
-        try {
+        $request->validate([
+            'current_password' => 'required',
+            'new_password' => ['required', 'confirmed', Rules\Password::defaults()],
 
-            $updatePasswordController = new UpdateUserPassword;
-
-            $updatePasswordController->update(Auth::user(), $request->all());
-
-            return redirect()
-                ->back()->with('success',  'تم التحديث بنجاح');
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'حدث خطأ أثناء التحديث');
+        ]);
+        #Match The Old Password
+        $user = Auth::user();
+        if (!Hash::check($request->current_password, $user->password)) {
+            throw ValidationException::withMessages(['current_password' => ':كلمة السر القديمة ليست صحيحة']);
         }
+        #Update the new Password
+        User::whereId($user->id)->update([
+            'password' => Hash::make($request->new_password)
+        ]);
+
+        return back()->with('success', 'تم تحديث كلمة السر بنجاح');
     }
 
 
-    public function update(UserRequest $request, User $user)
+    public function update(Request $request, User $user)
     {
-        Gate::authorize('users.update');
+
+        if (Auth::user()->id !== $user->id) {
+            if (Auth::user()->type !== 'admin') {
+                Gate::authorize('users.update');
+            }
+        }
 
         $user->update($request->all());
+
         return redirect()
-            ->route('dashboard.users.index')
-            ->with('success', 'تم التحديث بنجاح');
+            ->route('dashboard.posts.index')
+            ->with('success', 'تم تحديث الحساب بنجاح');
     }
 
 
@@ -121,7 +141,7 @@ class UserController extends Controller
         return view('dashboard.users.trash', compact('users'));
     }
 
-    public function restore(UserRequest $request, $id)
+    public function restore(Request $request, $id)
     {
         Gate::authorize('users.restore');
         $user = User::onlyTrashed()->findOrFail($id);

@@ -1,12 +1,4 @@
-@if ($errors->any())
-    <div class="alert alert-danger">
-        <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-@endif
+<x-auth-validation-errors />
 
 @push('styles')
     <link href="{{ asset('css/tagify.css') }}" rel="stylesheet" type="text/css" />
@@ -81,14 +73,17 @@
             // ],
             lang: "ar-AR",
             toolbar: [
-                    // [groupName, [list of button]]
-                    ['Insert', ['picture', 'link', 'video', 'table', 'hr', ]],
-                    ['Font Style', ['fontname', 'fontsize', 'fontsizeunit', 'color', 'forecolor', 'backcolor', 'bold', 'italic', 'underline', 'strikethrough', 'superscript', 'subscript', 'clear',]],
-                    ['Paragraph style', ['style', 'ol', 'ul', 'paragraph', 'height',]],
-                    ['Misc', ['fullscreen', 'codeview', 'undo', 'redo', 'help',]],
-                    // your settings
-                ],
+                // [groupName, [list of button]]
+                ['Insert', ['picture', 'link', 'video', 'table', 'hr', ]],
+                ['Font Style', ['fontname', 'fontsize', 'fontsizeunit', 'color', 'forecolor', 'backcolor',
+                    'bold', 'italic', 'underline', 'strikethrough', 'superscript', 'subscript', 'clear',
+                ]],
+                ['Paragraph style', ['style', 'ol', 'ul', 'paragraph', 'height', ]],
+                ['Misc', ['fullscreen', 'codeview', 'undo', 'redo', 'help', ]],
+                // your settings
+            ],
         });
-
     </script>
 @endpush
+
+

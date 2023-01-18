@@ -16,9 +16,17 @@
             'is-invalid' => $errors->has($name)
         ]) }}
     >
+
     <label class="form-check-label">
         {{ $text }}
     </label>
 </div>
 
 @endforeach
+
+
+
+{{--
+<x-form.validation-feedback :name="$name" />
+
+    --}}

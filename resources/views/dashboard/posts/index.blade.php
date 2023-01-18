@@ -34,10 +34,13 @@
         <thead>
             <tr>
                 <th></th>
-                <th>ID</th>
+                @can('posts.delete')
+                    <th>الكاتب</th>
+                @endcan
                 <th>العنوان</th>
                 <th>القسم</th>
                 <th>الحالة</th>
+                <th>عدد الزوار</th>
                 <th>تاريخ الانشاء</th>
                 <th colspan="3">العمليات</th>
             </tr>
@@ -46,16 +49,23 @@
             @forelse($posts as $post)
                 <tr>
                     <td><img src="{{ $post->image_url }}" alt="" height="50"></td>
-                    <td>{{ $post->id }}</td>
-                    <td>{{ $post->title }}</td>
-                    <td>{{ $post->category->name ?? '' }}</td>
-                    <td>{{ ($post->status == 'active') ? 'فعالة' : (($post->status == 'archived') ? 'مؤرشفة' : 'مسودة') }}</td>
+                    @can('posts.delete')
+                    <td><a href="{{ route('dashboard.users.show', $post->user->id) }}">{{ $post->user->name }}</a></td>
+                    @endcan
 
-                    <td>{{ $post->created_at }}</td>
-                    <td>
-                        <button data-id="{{ $post->id }}"
-                            class="operation_status btn btn-sm btn-outline-primary">تغير الحالة</button>
+                    <td>{{ $post->title }}</td>
+                    <td>{{ $post->category->name ?? 'محذوف' }}</td>
+                    <td>{{ $post->status == 'active' ? 'فعالة' : ($post->status == 'archived' ? 'مؤرشفة' : 'مسودة') }}
                     </td>
+
+                    <td>{{ $post->count_visitor }}</td>
+                    <td>{{ $post->created_at }}</td>
+                    @can('posts.delete')
+                        <td>
+                            <button data-id="{{ $post->id }}" class="operation_status btn btn-sm btn-outline-primary">تغير
+                                الحالة</button>
+                        </td>
+                    @endcan
                     <td>
                         <a href="{{ route('dashboard.posts.edit', $post->id) }}"
                             class="btn btn-sm btn-outline-success">تعديل</a>

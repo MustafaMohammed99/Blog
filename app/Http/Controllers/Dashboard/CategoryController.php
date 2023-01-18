@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use App\Concerns\UploadImages;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Session;
 
@@ -19,13 +20,12 @@ class CategoryController extends Controller
 
     public function index()
     {
-        $request = request();
-        $categories = Category::with('parent')->withCount([
+        $categories = Category::withCount([
             'posts' => function ($query) {
-                $query->where('status', '=', 'active');
+                $query->active();
             }
         ])
-            ->filter($request->query())
+            ->filter(request()->query())
             ->orderBy('categories.id')
             ->paginate();
 
@@ -34,9 +34,8 @@ class CategoryController extends Controller
 
     public function create()
     {
-        $parents = Category::all()->pluck('name', 'id');
         $category = new Category();
-        return view('dashboard.categories.create', compact('category', 'parents'));
+        return view('dashboard.categories.create', compact('category'));
     }
 
 
@@ -63,23 +62,10 @@ class CategoryController extends Controller
 
     public function edit(Category $category)
     {
-        // SELECT * FROM categories WHERE id <> $id
-        // AND (parent_id IS NULL OR parent_id <> $id)
-        $parents = Category::where('id', '<>', $category->id)
-            ->where(function ($query) use ($category) {
-                $query->whereNull('parent_id')
-                    ->orWhere('parent_id', '<>', $category->id);
-            })->get()->pluck('name', 'id');
-        return view('dashboard.categories.edit', compact('category', 'parents'));
+        return view('dashboard.categories.edit', compact('category'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function update(CategoryRequest $request, Category $category)
     {
         $old_image = $category->image;
@@ -112,7 +98,7 @@ class CategoryController extends Controller
     {
         Gate::authorize('categories.trash');
         $request = request();
-        $categories = Category::with('parent')->withCount([
+        $categories = Category::withCount([
             'posts' => function ($query) {
                 $query->where('status', '=', 'active');
             }

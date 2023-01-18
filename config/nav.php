@@ -29,4 +29,11 @@ return [
         'active' => 'dashboard.users.*',
         'ability' => 'users.view',
     ],
+    [
+        'icon' => 'fas fa-box nav-icon',
+        'route' => 'dashboard.users.edit',
+        'title' => 'تعديل الحساب',
+        'active' => 'dashboard.users.edit',
+        'ability' => 'users.view',
+    ],
 ];

@@ -2,10 +2,10 @@
 
 namespace App\Models;
 
+use App\Models\Scopes\PostScope;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Scopes\StoreScope;
-use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Validator;
@@ -17,17 +17,23 @@ class Post extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'title', 'slug', 'description', 'image', 'category_id', 'status',
+        'created_at', 'count_visitor', 'title', 'slug', 'description', 'image', 'category_id', 'user_id', 'status',
     ];
 
     protected $hidden = [
         'image',
-        'created_at', 'updated_at', 'deleted_at',
+        'updated_at', 'deleted_at',
     ];
 
     protected $appends = [
         'image_url',
     ];
+
+
+    public function getCreatedAtAttribute($value)
+    {
+        return Carbon::parse($value)->format('Y-m-d');
+    }
 
     protected static function booted()
     {
@@ -38,15 +44,20 @@ class Post extends Model
                     'required', 'string', 'min:3', 'max:255',
                     Rule::unique('posts', 'slug')->ignore($post->id),
                 ],
-            ],['slug'=>'لا يمكن تكرار العنوان'])->validate();
-
-
+            ], ['slug' => 'لا يمكن تكرار العنوان'])->validate();
         });
+
+        static::addGlobalScope('user', new PostScope());
     }
 
     public function category()
     {
         return $this->belongsTo(Category::class, 'category_id', 'id');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
 
@@ -87,12 +98,23 @@ class Post extends Model
             $builder->where('posts.title', 'LIKE', "%{$value}%");
         });
 
+        $builder->when($filters['description'] ?? false, function ($builder, $value) {
+            $builder->where('posts.description', 'LIKE', "%{$value}%");
+        });
+
         $builder->when($filters['status'] ?? false, function ($builder, $value) {
             $builder->where('posts.status', '=', $value);
         });
+    }
 
-        //     $builder->when($options['category_id'], function ($builder, $value) {
-        //     $builder->where('category_id', $value);
-        // });
+
+    public function scopeFilterSearch(Builder $builder, $filters)
+    {
+        $builder->when($filters['s'] ?? false, function ($builder, $value) {
+            $builder->where('posts.title', 'LIKE', "%{$value}%")
+                ->orWhere('posts.description', 'LIKE', "%{$value}%");
+        });
+
+
     }
 }

@@ -36,6 +36,8 @@
             <th>الاسم</th>
             <th>النوع</th>
             <th>تاريخ الانشاء</th>
+            <th>عدد المقالات</th>
+
             <th colspan="2"></th>
         </tr>
     </thead>
@@ -46,6 +48,7 @@
             <td><a href="{{ route('dashboard.users.show', $user->id) }}">{{ $user->name }}</a></td>
             <td>{{ $user->type }}</td>
             <td>{{ $user->created_at }}</td>
+            <td>{{ $user->posts_count  }}</td>
             <td>
                 @can('users.update')
                 <a href="{{ route('dashboard.users.edit', $user->id) }}" class="btn btn-sm btn-outline-success">تعديل</a>

@@ -33,13 +33,16 @@ Route::middleware('auth')->group(function () {
 
 
 Route::get('/', [HomeController::class, 'index'])
-->name('home');
+    ->name('home');
+
+Route::get('/search', [HomeController::class, 'search'])
+    ->name('home.search');
 
 Route::get('categories/{category}', [CategoriesController::class, 'show'])
-->name('categories.show');
+    ->name('categories.show');
 
 Route::get('post/{post}', [PostsController::class, 'show'])
-->name('posts.show');
+    ->name('posts.show');
 
 // require __DIR__.'/auth.php';
-require __DIR__.'/dashboard.php';
+require __DIR__ . '/dashboard.php';

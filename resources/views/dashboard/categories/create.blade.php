@@ -1,14 +1,13 @@
 @extends('layouts.dashboard')
 
-@section('title', 'Categories')
+@section('title', 'الاصناف')
 
 @section('breadcrumb')
 @parent
-<li class="breadcrumb-item active">Categories</li>
+<li class="breadcrumb-item active">الاصناف</li>
 @endsection
 
 @section('content')
-
 <form action="{{ route('dashboard.categories.store') }}" method="post" enctype="multipart/form-data">
     @csrf
 

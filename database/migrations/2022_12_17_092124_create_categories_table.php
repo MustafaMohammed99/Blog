@@ -15,12 +15,9 @@ return new class extends Migration
     {
         Schema::create('categories', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('parent_id')->nullable()
-                ->constrained('categories', 'id')->nullOnDelete();
             $table->string('name');
             $table->string('slug')->unique();
             $table->string('image');
-            $table->enum('distinctive', ['yes', 'no']);
             $table->enum('status', ['active', 'archived']);
 
             $table->softDeletes();

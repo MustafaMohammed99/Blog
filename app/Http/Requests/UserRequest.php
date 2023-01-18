@@ -21,16 +21,15 @@ class UserRequest extends FormRequest
 
     public function rules()
     {
-        $id = $this->route('category');
+        $id = $this->route('user');
         return [
             'name' => [
                 'required', 'string', 'min:3', 'max:255',
-                Rule::unique('categories', 'name')->ignore($id),
+                Rule::unique('users', 'name')->ignore($id),
             ],
-            'parent_id' => ['nullable', 'int', 'exists:categories,id'],
-            'image' => $id == null ? 'required|image' : 'image',
-            'distinctive' => 'required|in:yes,no',
-            'status' => 'required|in:active,archived',
+            'email' => 'required|email',
+            'type' => 'required|in:admin,user',
+            'password'=>'required|sometimes'
         ];
     }
 

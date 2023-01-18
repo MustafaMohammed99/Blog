@@ -18,10 +18,16 @@ class CategoriesController extends Controller
         if ($category->status != 'active') {
             abort(404);
         }
-        $category = $category->load('posts');
+        $category =   Category::where('id', $category->id)->with(['posts' => function ($query) {
+            $query->with(['tags' => function ($queryTags) {
+                $queryTags->take(2);
+            }]);
+        }])->first();
 
-        $recentPosts = Post::latest()->limit(8)->get();
+        $categories = Category::active()->withCount('posts')->get(); // to left page in front
+        $recentPosts = Post::latest()->active()->limit(8)->get(); // to left page in front
 
-        return view('front.category.show', compact('category','recentPosts'));
+
+        return view('front.category.show', compact('category', 'recentPosts', 'categories'));
     }
 }

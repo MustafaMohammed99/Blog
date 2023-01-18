@@ -6,7 +6,7 @@
 <label for="">{{ $label }}</label>
 @endif
 
-<input 
+<input
     type="{{ $type }}"
     name="{{ $name }}"
     value="{{ old($name, $value) }}"

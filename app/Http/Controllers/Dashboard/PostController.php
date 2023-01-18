@@ -8,26 +8,26 @@ use App\Models\Category;
 use App\Models\Post;
 use Illuminate\Support\Facades\Storage;
 use App\Concerns\UploadImages;
+use App\Concerns\DealDOMDocument;
 use App\Models\Tag;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
 class PostController extends Controller
 {
-    use UploadImages;
+    use UploadImages, DealDOMDocument;
 
 
     public function index()
     {
-        $request = request();
-        $posts = Post::with('category')
-            ->filter($request->query())
+        $posts = Post::with('category', 'user:id,name')
+            ->filter(request()->query())
             ->orderBy('posts.title')
             ->paginate();
-
         return view('dashboard.posts.index', compact('posts'));
     }
 
@@ -46,7 +46,11 @@ class PostController extends Controller
     {
         $data = $request->except('image', 'tags', 'status', 'description');
         $data['image'] = $this->uploadImage($request, 'posts');
-        $data['description'] = $this->prepareHtml('<?xml encoding="utf-8" ?>' . $request->description); // upload image from html and return body html
+        /*
+        '<?xml encoding="utf-8" ?>'
+        */
+        $data['description'] = $this->prepareHtml($request->description); // upload images from html and add content return body html
+        $data['user_id'] = Auth::user()->id;
         $post = Post::create($data);
         $this->addTags($request, $post);
         return Redirect::route('dashboard.posts.index')
@@ -91,6 +95,7 @@ class PostController extends Controller
         if ($new_image) {
             $data['image'] = $new_image;
         }
+        // dd($request->description);
         $data['description'] = $this->prepareHtml($request->description); // upload images from html and return body html
         $post->update($data);
         $this->addTags($request, $post);
@@ -125,7 +130,7 @@ class PostController extends Controller
 
     public function destroy(post $post)
     {
-        Gate::authorize('categories.delete');
+        Gate::authorize('posts.delete');
         $post->delete();
         return Redirect::route('dashboard.posts.index')
             ->with('success', 'Proudct deleted!');
@@ -135,7 +140,7 @@ class PostController extends Controller
 
     public function trash()
     {
-        Gate::authorize('categories.trash');
+        Gate::authorize('posts.trash');
         $request = request();
         $posts = Post::with(['category'])
             ->filter($request->query())
@@ -146,7 +151,7 @@ class PostController extends Controller
 
     public function restore(Request $request, $id)
     {
-        Gate::authorize('categories.restore');
+        Gate::authorize('posts.restore');
         $post = Post::onlyTrashed()->findOrFail($id);
         $post->restore();
 
@@ -156,7 +161,7 @@ class PostController extends Controller
 
     public function forceDelete($id)
     {
-        Gate::authorize('categories.forceDelete');
+        Gate::authorize('posts.forceDelete');
         $post = Post::onlyTrashed()->findOrFail($id);
         $post->forceDelete();
 

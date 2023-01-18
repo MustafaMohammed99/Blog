@@ -33,13 +33,12 @@
     <table class="table">
         <thead>
             <tr>
-                <th></th>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Parent</th>
-                <th>Posts #</th>
-                <th>Status</th>
-                <th>Created At</th>
+                <th>الصورة</th>
+                <th>المعرف</th>
+                <th>الصنف</th>
+                <th>عدد المقالات </th>
+                <th>الحالة</th>
+                <th>تاريخ الانشاء</th>
                 <th colspan="2"></th>
             </tr>
         </thead>
@@ -49,7 +48,6 @@
                     <td><img src="{{ $category->image_url }}" alt="" height="50"></td>
                     <td>{{ $category->id }}</td>
                     <td><a href="{{ route('dashboard.categories.show', $category->id) }}">{{ $category->name }}</a></td>
-                    <td>{{ $category->parent->name }}</td>
                     <td>{{ $category->posts_count }}</td>
                     <td>{{ $category->status }}</td>
                     <td>{{ $category->created_at }}</td>

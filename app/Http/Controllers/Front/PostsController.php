@@ -19,8 +19,10 @@ class PostsController extends Controller
         if ($post->status != 'active') {
             abort(404);
         }
-        $recentPosts = Post::latest()->limit(8)->get();
+        $categories = Category::active()->withCount('posts')->get(); // to left page in front
+        $recentPosts = Post::latest()->active()->limit(8)->get(); // to left page in front
+
         $tags= $post->load('tags');
-        return view('front.post.show', compact('post','recentPosts', 'tags'));
+        return view('front.post.show', compact('post','recentPosts', 'tags','categories'));
     }
 }

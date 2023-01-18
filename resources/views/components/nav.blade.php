@@ -5,10 +5,14 @@
     <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
         @foreach ($items as $item)
             <li class=" nav-item">
-                <a href="{{ route($item['route']) }}"
-                    class="d-flex align-items-center  {{ Route::is($item['active']) ? 'active' : '' }}">
+                @if ($item['route'] === 'dashboard.users.edit')
+                    <a href="{{ route($item['route'],Auth::user()->id) }}"
+                        class="d-flex align-items-center  {{ Route::is($item['active']) ? 'active' : '' }}">
+                    @else
+                        <a href="{{ route($item['route']) }}"
+                            class="d-flex align-items-center  {{ Route::is($item['active']) ? 'active' : '' }}">
+                @endif
 
-                    <i class="{{ $item['icon'] }}"></i>
                     <p>
                         {{ $item['title'] }}
                         @if (isset($item['badge']))
@@ -20,6 +24,3 @@
         @endforeach
     </ul>
 </div>
-
-
-

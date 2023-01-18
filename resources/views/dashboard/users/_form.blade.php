@@ -1,3 +1,5 @@
+<x-auth-validation-errors />
+
 <div class="form-group">
     <x-form.input label="الاسم" class="form-control-lg" name="name" :value="$user->name" />
 </div>
@@ -8,12 +10,11 @@
 <div class="form-group">
     <label for="">نوع المستخدم</label>
     <div>
-        <x-form.radio name="status" :checked="$user->type" :options="['admin' => 'admin', 'user' => 'user']" />
+        <x-form.radio name="type" :checked="$user->type" :options="['admin' => 'admin', 'user' => 'user']" />
     </div>
 </div>
 
-@if ($confirm_password === false)
-    <h1>{{$confirm_password}}</h1>
+@if ($showPassword === true)
     <div class="form-group">
         <x-form.input label="كلمة السر" type="password" name="password" />
     </div>

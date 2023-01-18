@@ -11,10 +11,8 @@
 @section('content')
 
     <x-alert type="success" />
-    <x-alert type="errors" />
 
-
-    <form action="{{ route('dashboard.users.update-password', $user->id) }}" method="post">
+    <form action="{{ route('dashboard.users.update', $user->id) }}" method="post">
         @csrf
         @method('put')
 
@@ -28,15 +26,15 @@
             @csrf
             @method('put')
             <div class="form-group">
-                <x-form.input label=" كلمة السر القديمة" type="password"  name="current_password" required />
+                <x-form.input label=" كلمة السر القديمة" type="password" name="current_password" required />
             </div>
 
             <div class="form-group">
-                <x-form.input label=" كلمة السر الجديدة" type="password"  name="password" required />
+                <x-form.input label=" كلمة السر الجديدة" type="password" name="new_password" required />
             </div>
 
             <div class="form-group">
-                <x-form.input label="تأكيد كلمة السر الجديدة " type="password"  name="password_confirmation" required />
+                <x-form.input label="تأكيد كلمة السر الجديدة " type="password" name="new_password_confirmation" required />
             </div>
 
 
@@ -44,40 +42,8 @@
                 <button type="submit" class="btn btn-primary">تحديث كلمة السر</button>
             </div>
 
-            {{-- <div class="form-group">
-                <label for="current_password">Current Password</label>
-                <input type="password" class="form-control" name="current_password" id="current_password" required>
-                @error('current_password')
-                    <div class="invalid-feedback">
-                        {{ $message }}
-                    </div>
-                @enderror
-            </div>
-
-            <div class="form-group">
-                <label for="password">New Password</label>
-                <input type="password" class="form-control" name="password" id="password" required>
-                @error('password')
-                    <div class="invalid-feedback">
-                        {{ $message }}
-                    </div>
-                @enderror
-            </div>
-
-            <div class="form-group">
-                <label for="password_confirmation">Confirm Password</label>
-                <input type="password" class="form-control" name="password_confirmation" id="password_confirmation" required>
-                @error('password_confirmation')
-                    <div class="invalid-feedback">
-                        {{ $message }}
-                    </div>
-                @enderror
-            </div>
-
-            <button type="submit" class="btn btn-primary">Update Password</button> --}}
         </form>
-
-
     </div>
+
 
 @endsection

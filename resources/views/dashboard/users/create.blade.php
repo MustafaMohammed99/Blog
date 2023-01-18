@@ -7,6 +7,7 @@
 <li class="breadcrumb-item active">المستخدم</li>
 @endsection
 
+
 @section('content')
 
 <form action="{{ route('dashboard.users.store') }}" method="post">

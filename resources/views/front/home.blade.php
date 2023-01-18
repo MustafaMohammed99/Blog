@@ -11,141 +11,118 @@
 
 
 @section('content')
-    <div class="content-detached content-left">
 
-        <div class="content-body">
-
-            <div class="row ">
-                <div class="col-12 my-1">
-
-                    <section id="component-swiper-centered-slides">
-                        <div class="card bg-transparent shadow-none">
-                            <div class="card-header">
-                                <h4 class="card-title">احدث المقالات</h4>
-                            </div>
-                            <div class="card-body">
-                                <div
-                                    class="swiper-centered-slides swiper-container p-1 swiper-container-initialized swiper-container-horizontal swiper-container-rtl">
-                                    <div class="swiper-wrapper"
-                                        style="transition: all 0ms ease 0s; transform: translate3d(-350px, 0px, 0px);"
-                                        id="swiper-wrapper-91d472c866cb9043" aria-live="polite">
-                                        @php
-                                            $count_latest = count($latest_posts);
-                                        @endphp
-                                        @foreach ($latest_posts as $key => $post)
-                                            <div class="swiper-slide rounded swiper-shadow " style="margin-left: 30px;"
-                                                role="group" aria-label="{{ $key }} / {{ $count_latest }}">
-
-                                                <img src="{{ $post->image_url }}" alt="Blog Post pic" class="rounded"
-                                                    width="120" height="120">
-                                                <div class="swiper-text pt-md-1 pt-sm-50">
-                                                    <a href="{{ route('posts.show', $post->id) }}">
-                                                        {{ $post->title }}</a>
-                                                </div>
-                                            </div>
-                                        @endforeach
-                                    </div>
-
-
-                                    <!-- Add Arrows -->
-                                    <div class="swiper-button-next" tabindex="0" role="button" aria-label="Next slide"
-                                        aria-controls="swiper-wrapper-91d472c866cb9043" aria-disabled="false"></div>
-                                    <div class="swiper-button-prev swiper-button-disabled" tabindex="-1" role="button"
-                                        aria-label="Previous slide" aria-controls="swiper-wrapper-91d472c866cb9043"
-                                        aria-disabled="true"></div>
-                                    <span class="swiper-notification" aria-live="assertive" aria-atomic="true"></span>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-
+    <!-- start of banner -->
+    <div class="banner text-center">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-9 mx-auto">
+                    <h1 class="mb-5">ماذا تريد <br> أن تقرأ اليوم؟</h1>
+                    <ul class="list-inline widget-list-inline">
+                        @foreach ($categories as $category)
+                            <li class="list-inline-item">
+                                <a href="{{ route('categories.show', $category->id) }}">{{ $category->name }}</a>
+                            </li>
+                        @endforeach
+                    </ul>
                 </div>
             </div>
-
-            <div class="collapse-border" id="accordionExample0">
-                <h4 class="card-title">التصنيفات</h4>
-
-                <div class="row ">
-
-                    @foreach ($tree_parents as $key => $name_parent)
-                        <div class="col-md-3 my-1">
-                            <div class="card ">
-                                <div class="card-header " id="heading230" data-toggle="collapse" role="button"
-                                    data-target="#collapse{{ $key }}" aria-expanded="false"
-                                    aria-controls="collapse{{ $key }}">
-                                    <h4>{{ $name_parent['name'] }}</h4>
-                                </div>
-                                <div id="collapse{{ $key }}" class="collapse" aria-labelledby="heading230"
-                                    data-parent="#accordionExample0">
-                                    <div class="card-body">
-                                        <ul style="list-style-type: none;" class="category-items" itemprop="categoryItems">
-                                            @foreach ($name_parent['children'] as $key => $category)
-                                                <h6>
-                                                    <li><a href="{{ route('categories.show', $category->id) }}">
-                                                            {{ $category->name }}</a>
-                                                    </li>
-                                                </h6>
-                                            @endforeach
-                                        </ul>
-
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-                    @endforeach
-
-                </div>
-            </div>
-
-
         </div>
 
-    </div>
-@endsection
+        <svg class="banner-shape-1" width="39" height="40" viewBox="0 0 39 40" fill="none"
+            xmlns="http://www.w3.org/2000/svg">
+            <path d="M0.965848 20.6397L0.943848 38.3906L18.6947 38.4126L18.7167 20.6617L0.965848 20.6397Z" stroke="#040306"
+                stroke-miterlimit="10"></path>
+            <path class="path" d="M10.4966 11.1283L10.4746 28.8792L28.2255 28.9012L28.2475 11.1503L10.4966 11.1283Z">
+            </path>
+            <path d="M20.0078 1.62949L19.9858 19.3804L37.7367 19.4024L37.7587 1.65149L20.0078 1.62949Z" stroke="#040306"
+                stroke-miterlimit="10"></path>
+        </svg>
 
+        <svg class="banner-shape-2" width="39" height="39" viewBox="0 0 39 39" fill="none"
+            xmlns="http://www.w3.org/2000/svg">
+            <g filter="url(#filter0_d)">
+                <path class="path"
+                    d="M24.1587 21.5623C30.02 21.3764 34.6209 16.4742 34.435 10.6128C34.2491 4.75147 29.3468 0.1506 23.4855 0.336498C17.6241 0.522396 13.0233 5.42466 13.2092 11.286C13.3951 17.1474 18.2973 21.7482 24.1587 21.5623Z">
+                </path>
+                <path
+                    d="M5.64626 20.0297C11.1568 19.9267 15.7407 24.2062 16.0362 29.6855L24.631 29.4616L24.1476 10.8081L5.41797 11.296L5.64626 20.0297Z"
+                    stroke="#040306" stroke-miterlimit="10"></path>
+            </g>
+            <defs>
+                <filter id="filter0_d" x="0.905273" y="0" width="37.8663" height="38.1979"
+                    filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                    <feFlood flood-opacity="0" result="BackgroundImageFix"></feFlood>
+                    <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0">
+                    </feColorMatrix>
+                    <feOffset dy="4"></feOffset>
+                    <feGaussianBlur stdDeviation="2"></feGaussianBlur>
+                    <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"></feColorMatrix>
+                    <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow"></feBlend>
+                    <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow" result="shape"></feBlend>
+                </filter>
+            </defs>
+        </svg>
+
+        <svg class="banner-shape-3" width="39" height="40" viewBox="0 0 39 40" fill="none"
+            xmlns="http://www.w3.org/2000/svg">
+            <path d="M0.965848 20.6397L0.943848 38.3906L18.6947 38.4126L18.7167 20.6617L0.965848 20.6397Z" stroke="#040306"
+                stroke-miterlimit="10"></path>
+            <path class="path" d="M10.4966 11.1283L10.4746 28.8792L28.2255 28.9012L28.2475 11.1503L10.4966 11.1283Z">
+            </path>
+            <path d="M20.0078 1.62949L19.9858 19.3804L37.7367 19.4024L37.7587 1.65149L20.0078 1.62949Z" stroke="#040306"
+                stroke-miterlimit="10"></path>
+        </svg>
+
+        <svg class="banner-border" height="240" viewBox="0 0 2202 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+                d="M1 123.043C67.2858 167.865 259.022 257.325 549.762 188.784C764.181 125.427 967.75 112.601 1200.42 169.707C1347.76 205.869 1901.91 374.562 2201 1"
+                stroke-width="2"></path>
+        </svg>
+
+
+    </div>
+    <!-- end of banner -->
+
+    <section class="section pb-0">
+        <div class="container">
+            <div class="row">
+                <x-front.slider-home :posts="$latest_posts" title="متداول" />
+                <div class="col-12">
+                    <div class="border-bottom border-default"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section-sm">
+        <div class="container">
+            <div class="row justify-content-center">
+
+                <aside class="col-lg-8 @@sidebar">
+                    <x-front.posts-right-page :posts="$most_viewed_posts" title="المقالات الاكثر مشاهدة" />
+                </aside>
+
+                <div class="col-lg-4 @@sidebar">
+                    <x-front.ctegories-left-page :categories="$categories" />
+                    <!-- Promotion -->
+                    {{-- <div class="promotion">
+                        <img src="images/promotion.jpg" class="img-fluid w-100">
+                        <div class="promotion-content">
+                            <h5 class="text-white mb-3">Create Stunning Website!!</h5>
+                            <p class="text-white mb-4">Lorem ipsum dolor sit amet, consectetur sociis. Etiam nunc amet
+                                id dignissim. Feugiat id tempor vel sit ornare turpis posuere.</p>
+                            <a href="https://themefisher.com/" class="btn btn-primary">Get Started</a>
+                        </div>
+                    </div> --}}
+                </div>
+            </div>
+        </div>
+    </section>
+
+@endsection
 
 @push('scripts')
     <script src="{{ asset('assets/dashboard/app-assets/vendors/js/extensions/swiper.min.js') }}"></script>
     <script src="{{ asset('assets/dashboard/app-assets/js/scripts/extensions/ext-component-swiper.js') }}"></script>
 @endpush
-
-
-{{--
-        <div class="swiper-wrapper"
-                                        style="transition: all 0ms ease 0s; transform: translate3d(-350px, 0px, 0px);"
-                                        id="swiper-wrapper-91d472c866cb9043" aria-live="polite">
-
-                                        <div class="swiper-slide rounded swiper-shadow swiper-slide-active"
-                                            style="margin-left: 30px;" role="group" aria-label="1 / 5">
-
-                                            <img src="http://127.0.0.1:8000/uploads/posts/EiyTulSEl1u4oBLIQSpeXvvIYRfMaWe72xQbUyDV.jpg"
-                                                alt="Blog Post pic" class="rounded" width="120" height="120">
-                                            <div class="swiper-text pt-md-1 pt-sm-50">Getting Started</div>
-                                        </div>
-                                        <div class="swiper-slide rounded swiper-shadow "
-                                            style="margin-left: 30px;" role="group" aria-label="2 / 5">
-                                            <img src="http://127.0.0.1:8000/uploads/posts/TL1vGP9xk9Rle0md4ihm0zsaDBxy1qlR70nvsFMj.jpg"
-                                                alt="Blog Post pic" class="rounded" width="120" height="120">
-                                            <div class="swiper-text pt-md-1 pt-sm-50">Pricing &amp; Plans</div>
-                                        </div>
-                                        <div class="swiper-slide rounded swiper-shadow" style="margin-left: 30px;"
-                                            role="group" aria-label="3 / 5">
-                                            <img src="http://127.0.0.1:8000/uploads/posts/TL1vGP9xk9Rle0md4ihm0zsaDBxy1qlR70nvsFMj.jpg"
-                                                alt="Blog Post pic" class="rounded" width="120" height="120">
-                                            <div class="swiper-text pt-md-1 pt-sm-50">Sales Question</div>
-                                        </div>
-                                        <div class="swiper-slide rounded swiper-shadow" style="margin-left: 30px;"
-                                            role="group" aria-label="4 / 5">
-                                            <img src="http://127.0.0.1:8000/uploads/posts/TL1vGP9xk9Rle0md4ihm0zsaDBxy1qlR70nvsFMj.jpg"
-                                                alt="Blog Post pic" class="rounded" width="120" height="120">
-                                            <div class="swiper-text pt-md-1 pt-sm-50">Usage Guides</div>
-                                        </div>
-                                        <div class="swiper-slide rounded swiper-shadow" style="margin-left: 30px;"
-                                            role="group" aria-label="5 / 5">
-                                            <img src="http://127.0.0.1:8000/uploads/posts/TL1vGP9xk9Rle0md4ihm0zsaDBxy1qlR70nvsFMj.jpg"
-                                                alt="Blog Post pic" class="rounded" width="120" height="120">
-                                            <div class="swiper-text pt-md-1 pt-sm-50">General Guide</div>
-                                        </div>
-                                    </div>
-    --}}
